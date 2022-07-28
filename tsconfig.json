@@ -42,7 +42,7 @@
       "~/models/*": ["src/models/*"],
       "~/api/*": ["src/api/*"],
       "~/modules/*": ["src/modules/*"],
-      "~/mocks/*": ["src/mocks/*"],
+      "~/mocks/*": ["src/mocks/*"]
     }
   },
   "include": ["src"],
