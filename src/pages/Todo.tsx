@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { ACTIONS, SUBJECTS } from '~/configs/auth';
+import { useAbility } from '~/hooks';
 import { useAuth } from '~/hooks/useAuth';
 
 interface Todo {
@@ -7,11 +9,6 @@ interface Todo {
 }
 
 export default function Todo() {
-  const { user, can } = useAuth();
-  const isYouCanRead = can('Todo', 'Read');
-  const isYouCanDelete = can('Todo', 'Delete');
-  const isYouCanCreate = can('Todo', 'Create');
-
   const [todos, setTodos] = useState<Todo[]>([
     {
       id: 1,
@@ -24,37 +21,53 @@ export default function Todo() {
   ]);
   const [title, setTitle] = useState('');
 
+  const { user } = useAuth();
+  const ability = useAbility();
+
+  const isYouCan = useMemo(() => {
+    const rules = ability.rules.filter((rule) => rule.inverted);
+    const createTodo = ability?.can(ACTIONS.create, SUBJECTS.Todo);
+    const deleteTodo = ability?.can(ACTIONS.delete, SUBJECTS.Todo);
+    const readTodo = ability?.can(ACTIONS.read, SUBJECTS.Todo);
+    return {
+      rules,
+      createTodo,
+      deleteTodo,
+      readTodo,
+    };
+  }, [ability]);
+
   const handleAddTodo = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (!title) return;
-    if (isYouCanCreate) {
+    if (isYouCan.createTodo) {
       setTodos([...todos, { id: new Date().getTime(), title }]);
     } else {
-      alert('Only editor can create todo');
+      const reasonCanNot = isYouCan.rules.find((rule) => rule.action === 'create')?.reason;
+      alert(reasonCanNot);
     }
   };
 
   const handleDeleteTodo = (id: number) => {
-    if (isYouCanDelete) {
+    if (isYouCan.deleteTodo) {
       setTodos(todos.filter((todo) => todo.id !== id));
     } else {
-      alert('Only admin can delete todo');
+      const reasonCanNot = isYouCan.rules.find((rule) => rule.action === 'delete')?.reason;
+      alert(reasonCanNot);
     }
   };
 
   return (
     <div>
-      {isYouCanRead ? (
+      {isYouCan.readTodo ? (
         <>
           <h1>This is the User Dashboard Page</h1>
           <h2> Your role is: {user?.role ? user?.role : 'You are not logged in'}</h2>
           <h2>
             Your role has permissions:
-            {user?.role === 'Admin'
-              ? 'You can add and delete todos'
-              : user?.role === 'Subscriber'
-              ? 'You can read and edit todo'
-              : 'You can read todo'}
+            {ability.rules
+              .filter((rule) => !rule.inverted)
+              .map((rule) => rule.action)
+              .join(', ')}
           </h2>
 
           {todos.map((todo) => (
@@ -63,16 +76,21 @@ export default function Todo() {
               <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
             </div>
           ))}
+
+          <br />
+          <br />
+
           <form onSubmit={handleAddTodo}>
             <div>
               <label htmlFor='title'>Title</label>
               <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
-            <button type='submit'>Add todo</button>
+            <br />
+            <button>Add todo</button>
           </form>
         </>
       ) : (
-        <h1>You are not logged in</h1>
+        <h1>{isYouCan.rules.find((rule) => rule.action === 'read')?.reason}</h1>
       )}
     </div>
   );
