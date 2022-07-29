@@ -18,9 +18,7 @@ export default function Login() {
   };
 
   return auth?.isAuthenticated ? (
-    <h1>
-      You are logged in as email {auth.user?.email} and {auth?.user?.role} role
-    </h1>
+    <h1>You are logged in as role {auth?.user?.role}</h1>
   ) : (
     <div>
       <h1>Login Page</h1>

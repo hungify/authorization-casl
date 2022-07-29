@@ -8,7 +8,6 @@ export interface User {
   id?: number;
   name?: string;
   isAuthenticated?: boolean;
-  abilities?: Abilities;
 }
 
 // export type UserLogin = Pick<User, 'email' | 'password'>;
@@ -21,7 +20,3 @@ export type Roles = keyof typeof ROLES;
 export type Actions = keyof typeof ACTIONS;
 
 export type Subjects = keyof typeof SUBJECTS;
-
-export type Abilities = {
-  [key in Subjects]?: Actions[];
-};
