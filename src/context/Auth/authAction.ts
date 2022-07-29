@@ -1,4 +1,4 @@
-import { UserLogin, UserRegister } from '~/interfaces/user';
+import { UserLogin, UserRegister } from '~/interfaces/auth';
 
 export const enum AuthTypes {
   login = 'auth/login',
