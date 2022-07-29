@@ -19,6 +19,9 @@ export default function MainLayout() {
       <Link to='editor'>Editor</Link>
       <br />
       <br />
+      <Link to='subscriber'>Subscriber</Link>
+      <br />
+      <br />
       <Link to='todo'>Todo</Link>
       <br />
       <br />
