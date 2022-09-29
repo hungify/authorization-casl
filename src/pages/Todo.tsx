@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { findReason } from '~/configs/ability';
 import { ACTIONS, SUBJECTS } from '~/configs/auth';
 import { useAbility } from '~/hooks';
 import { useAuth } from '~/hooks/useAuth';
@@ -24,13 +25,11 @@ export default function Todo() {
   const { user } = useAuth();
   const ability = useAbility();
 
-  const isYouCan = useMemo(() => {
-    const rules = ability.rules.filter((rule) => rule.inverted);
+  const youCan = useMemo(() => {
     const createTodo = ability?.can(ACTIONS.create, SUBJECTS.Todo);
     const deleteTodo = ability?.can(ACTIONS.delete, SUBJECTS.Todo);
     const readTodo = ability?.can(ACTIONS.read, SUBJECTS.Todo);
     return {
-      rules,
       createTodo,
       deleteTodo,
       readTodo,
@@ -39,29 +38,27 @@ export default function Todo() {
 
   const handleAddTodo = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (isYouCan.createTodo) {
+    if (youCan.createTodo) {
       setTodos([...todos, { id: new Date().getTime(), title }]);
     } else {
-      const reasonCanNot = isYouCan.rules.find((rule) => rule.action === 'create')?.reason;
-      alert(reasonCanNot);
+      alert(findReason(ability, 'create'));
     }
   };
 
   const handleDeleteTodo = (id: number) => {
-    if (isYouCan.deleteTodo) {
+    if (youCan.deleteTodo) {
       setTodos(todos.filter((todo) => todo.id !== id));
     } else {
-      const reasonCanNot = isYouCan.rules.find((rule) => rule.action === 'delete')?.reason;
-      alert(reasonCanNot);
+      alert(findReason(ability, 'delete'));
     }
   };
 
   return (
     <div>
-      {isYouCan.readTodo ? (
+      {youCan.readTodo ? (
         <>
           <h1>This is the User Dashboard Page</h1>
-          <h2> Your role is: {user?.role ? user?.role : 'You are not logged in'}</h2>
+          <h2> Your role is: {user?.role || 'You are not logged in'}</h2>
           <h2>
             Your role has permissions:
             {ability.rules
@@ -90,7 +87,7 @@ export default function Todo() {
           </form>
         </>
       ) : (
-        <h1>{isYouCan.rules.find((rule) => rule.action === 'read')?.reason}</h1>
+        <h1> {findReason(ability, 'create')} </h1>
       )}
     </div>
   );
