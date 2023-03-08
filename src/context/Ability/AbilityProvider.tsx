@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { AppAbility, buildAbilityFor } from '~/configs/ability';
+import buildAbilityFor, { AppAbility } from '~/configs/ability';
 import { useAuth } from '~/hooks/useAuth';
 
 export const AbilityContext = createContext<AppAbility>(undefined!);

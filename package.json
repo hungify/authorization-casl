@@ -14,31 +14,31 @@
     "yarn:upgrade": "yarn yarn-upgrade-all"
   },
   "dependencies": {
-    "@casl/ability": "^6.0.0",
-    "@casl/react": "^3.0.1",
+    "@casl/ability": "^6.3.3",
+    "@casl/react": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0",
-    "usehooks-ts": "^2.6.0"
+    "react-router-dom": "^6.8.2",
+    "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
-    "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
-    "@vitejs/plugin-react": "^2.0.0",
-    "eslint": "^8.20.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.6.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "@vitejs/plugin-react": "^3.1.0",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^2.7.1",
-    "typescript": "^4.7.4",
-    "vite": "^3.0.2",
-    "vite-tsconfig-paths": "^3.5.0",
-    "yarn-upgrade-all": "^0.7.1"
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.4",
+    "vite-tsconfig-paths": "^4.0.5",
+    "yarn-upgrade-all": "^0.7.2"
   },
   "license": "MIT"
 }

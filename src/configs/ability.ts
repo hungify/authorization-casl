@@ -1,12 +1,11 @@
-import { Ability, AbilityBuilder, AbilityClass } from '@casl/ability';
+import { AbilityBuilder, createMongoAbility, PureAbility } from '@casl/ability';
 import { Actions, Roles, Subjects } from '~/interfaces/auth';
 import { ACTIONS, ROLES, SUBJECTS } from './auth';
 
-export type AppAbility = Ability<[Actions, Subjects]>;
-export const appAbility = Ability as AbilityClass<AppAbility>;
+export type AppAbility = PureAbility<[Actions, Subjects]>;
 
-export default function defineRulesFor(role: Roles) {
-  const { can, cannot, rules } = new AbilityBuilder(appAbility);
+export default function buildAbilityFor(role: Roles): AppAbility {
+  const { can, cannot, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
   // defined permissions
   switch (role) {
@@ -28,16 +27,10 @@ export default function defineRulesFor(role: Roles) {
       break;
   }
 
-  return rules;
-}
-
-export function buildAbilityFor(role: Roles): AppAbility {
-  return new appAbility(defineRulesFor(role), {
-    detectSubjectType: (object: any) => object!.type,
-  });
+  return build();
 }
 
 export function findReason(ability: AppAbility, action: Actions) {
   const rules = ability.rules.filter((rule) => rule.inverted);
-  return rules.find((rule: any) => rule.action === action)?.reason;
+  return rules.find((rule) => rule.action === action)?.reason;
 }
