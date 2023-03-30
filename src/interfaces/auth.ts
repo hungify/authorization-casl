@@ -1,10 +1,9 @@
-import { SUBJECTS } from '~/configs/auth';
-import { ACTIONS, ROLES } from '~/configs/auth';
+import { Actions, Roles, Subjects } from '~/configs/auth';
 
 export interface User {
   email: string;
+  role: AppRole;
   password?: string;
-  role?: Roles;
   id?: number;
   name?: string;
   isAuthenticated?: boolean;
@@ -15,8 +14,8 @@ export type UserLogin = Pick<User, 'email'>;
 
 export type UserRegister = Omit<User, 'id' | 'isAuthenticated'>;
 
-export type Roles = keyof typeof ROLES;
+export type AppRole = keyof typeof Roles;
 
-export type Actions = keyof typeof ACTIONS;
+export type AppAction = keyof typeof Actions;
 
-export type Subjects = keyof typeof SUBJECTS;
+export type AppSubject = keyof typeof Subjects;

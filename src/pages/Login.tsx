@@ -23,8 +23,8 @@ export default function Login() {
     <div>
       <h1>Login Page</h1>
       <h2>admin role: admin</h2>
-      <h2>editor role: editor/editor</h2>
-      <h2>subscriber role: subscriber/subscriber</h2>
+      <h2>editor role: editor</h2>
+      <h2>subscriber role: subscriber</h2>
       <div>
         <span>Password</span>
         <input type='text' value={email} onChange={(e) => setEmail(e.target.value)} />

@@ -1,18 +1,18 @@
-export enum ROLES {
+export enum Roles {
   Admin = 'Admin',
   Editor = 'Editor',
   Subscriber = 'Subscriber',
   Guest = 'Guest',
 }
 
-export enum ACTIONS {
-  create = 'create',
-  delete = 'delete',
-  edit = 'edit',
-  read = 'read',
+export enum Actions {
+  Create = 'Create',
+  Delete = 'Delete',
+  Edit = 'Edit',
+  Read = 'Read',
 }
 
-export enum SUBJECTS {
+export enum Subjects {
   Auth = 'Auth',
   Todo = 'Todo',
 }

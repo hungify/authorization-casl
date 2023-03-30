@@ -1,36 +1,41 @@
 import { AbilityBuilder, createMongoAbility, PureAbility } from '@casl/ability';
-import { Actions, Roles, Subjects } from '~/interfaces/auth';
-import { ACTIONS, ROLES, SUBJECTS } from './auth';
+import { AppAction, AppRole, AppSubject } from '~/interfaces/auth';
+import { Actions, Roles, Subjects } from './auth';
 
 export type AppAbility = PureAbility<[Actions, Subjects]>;
 
-export default function buildAbilityFor(role: Roles): AppAbility {
+export default function buildAbilityFor(role: AppRole): AppAbility {
   const { can, cannot, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
   // defined permissions
   switch (role) {
-    case ROLES.Admin:
-      can([ACTIONS.delete, ACTIONS.read], SUBJECTS.Todo);
-      cannot(ACTIONS.create, SUBJECTS.Todo).because('Only editor can create Todos');
+    case Roles.Admin:
+      can([Actions.Delete, Actions.Read], Subjects.Todo);
+      cannot(Actions.Create, Subjects.Todo).because('Only editor can create Todos');
       break;
-    case ROLES.Editor:
-      can([ACTIONS.create, ACTIONS.read], SUBJECTS.Todo);
-      cannot('delete', SUBJECTS.Todo).because('Only admins can delete Todos');
+    case Roles.Editor:
+      can([Actions.Create, Actions.Read], Subjects.Todo);
+      cannot(Actions.Delete, Subjects.Todo).because('Only admins can delete Todos');
       break;
-    case ROLES.Subscriber:
-      can(ACTIONS.read, SUBJECTS.Todo);
-      cannot(ACTIONS.delete, SUBJECTS.Todo).because('Only admins can delete Todos');
-      cannot(ACTIONS.create, SUBJECTS.Todo).because('Only editor can create Todos');
+    case Roles.Subscriber:
+      can(Actions.Read, Subjects.Todo);
+      cannot(Actions.Delete, Subjects.Todo).because('Only admins can delete Todos');
+      cannot(Actions.Create, Subjects.Todo).because('Only editor can create Todos');
       break;
-    case ROLES.Guest:
-      can(ACTIONS.read, SUBJECTS.Auth);
+    case Roles.Guest:
+      cannot(Actions.Read, Subjects.Auth).because('Only authenticated users can read auth');
+      cannot(Actions.Read, Subjects.Todo).because('Only authenticated users can read todo');
       break;
   }
 
   return build();
 }
 
-export function findReason(ability: AppAbility, action: Actions) {
+export function findReason(ability: AppAbility, action: AppAction, subject: AppSubject) {
   const rules = ability.rules.filter((rule) => rule.inverted);
-  return rules.find((rule) => rule.action === action)?.reason;
+  // return rules.find((rule) => rule.action === action)?.reason || 'Default reason';
+  return (
+    rules.find((rule) => rule.action === action && rule.subject === subject)?.reason ||
+    'Default reason'
+  );
 }

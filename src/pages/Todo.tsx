@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
+import Can from '~/components/Can';
 import { findReason } from '~/configs/ability';
-import { ACTIONS, SUBJECTS } from '~/configs/auth';
+import { Actions, Subjects } from '~/configs/auth';
 import { useAbility } from '~/hooks';
 import { useAuth } from '~/hooks/useAuth';
 
@@ -25,10 +26,22 @@ export default function Todo() {
   const { user } = useAuth();
   const ability = useAbility();
 
+  const todoReason = useMemo(() => {
+    const createTodo = findReason(ability, Actions.Create, Subjects.Todo);
+    const deleteTodo = findReason(ability, Actions.Delete, Subjects.Todo);
+    const readTodo = findReason(ability, Actions.Read, Subjects.Todo);
+    return {
+      createTodo,
+      deleteTodo,
+      readTodo,
+    };
+  }, [ability]);
+
   const youCan = useMemo(() => {
-    const createTodo = ability?.can(ACTIONS.create, SUBJECTS.Todo);
-    const deleteTodo = ability?.can(ACTIONS.delete, SUBJECTS.Todo);
-    const readTodo = ability?.can(ACTIONS.read, SUBJECTS.Todo);
+    const createTodo = ability.can(Actions.Create, Subjects.Todo);
+    const deleteTodo = ability.can(Actions.Delete, Subjects.Todo);
+    const readTodo = ability.can(Actions.Read, Subjects.Todo);
+
     return {
       createTodo,
       deleteTodo,
@@ -41,7 +54,7 @@ export default function Todo() {
     if (youCan.createTodo) {
       setTodos([...todos, { id: new Date().getTime(), title }]);
     } else {
-      alert(findReason(ability, 'create'));
+      alert(todoReason.createTodo);
     }
   };
 
@@ -49,16 +62,26 @@ export default function Todo() {
     if (youCan.deleteTodo) {
       setTodos(todos.filter((todo) => todo.id !== id));
     } else {
-      alert(findReason(ability, 'delete'));
+      alert(todoReason.deleteTodo);
     }
   };
 
   return (
     <div>
+      <Can I={Actions.Read} a={Subjects.Todo}>
+        <div>Only guest cannot read todo</div>
+      </Can>
+      <Can I={Actions.Create} a={Subjects.Todo}>
+        <div>Only Editor can create todo</div>
+      </Can>
+      <Can I={Actions.Delete} a={Subjects.Todo}>
+        <div>Only Admin can delete todo</div>
+      </Can>
+
       {youCan.readTodo ? (
         <>
           <h1>This is the User Dashboard Page</h1>
-          <h2> Your role is: {user?.role || 'You are not logged in'}</h2>
+          <h2> Your role is: {user?.role}</h2>
           <h2>
             Your role has permissions:
             {ability.rules
@@ -87,7 +110,7 @@ export default function Todo() {
           </form>
         </>
       ) : (
-        <h1> {findReason(ability, 'create')} </h1>
+        <h1> {todoReason.readTodo} </h1>
       )}
     </div>
   );

@@ -1,9 +1,9 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '~/hooks/useAuth';
-import { Roles } from '~/interfaces/user';
+import { AppRole } from '~/interfaces/auth';
 
 interface ProtectedLayoutProps {
-  allowedRoles?: Roles[];
+  allowedRoles?: AppRole[];
 }
 
 export default function ProtectedLayout({ allowedRoles }: ProtectedLayoutProps) {
@@ -12,8 +12,9 @@ export default function ProtectedLayout({ allowedRoles }: ProtectedLayoutProps) 
 
   if (auth?.isAuthenticated && auth?.user?.role) {
     const { role } = auth.user;
+    const isAllowed = allowedRoles?.includes(role);
 
-    if (allowedRoles?.includes(role)) return <Outlet />;
+    if (isAllowed) return <Outlet />;
 
     return <Navigate to='unauthorized' state={{ from: location }} replace />;
   }

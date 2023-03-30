@@ -10,18 +10,21 @@ import Todo from '~/pages/Todo';
 import Unauthorized from '~/pages/Unauthorized';
 import './App.css';
 import Subscriber from '~/pages/Subscriber';
+import { Roles } from './configs/auth';
 
 function App() {
   return (
     <div className='App'>
       <Routes>
-        <Route element={<ProtectedLayout allowedRoles={['Admin']} />}>
+        <Route element={<ProtectedLayout allowedRoles={[Roles.Admin]} />}>
           <Route path='admin' element={<AdminDashboard />} />
         </Route>
-        <Route element={<ProtectedLayout allowedRoles={['Admin', 'Editor']} />}>
+        <Route element={<ProtectedLayout allowedRoles={[Roles.Admin, Roles.Editor]} />}>
           <Route path='editor' element={<Editor />} />
         </Route>
-        <Route element={<ProtectedLayout allowedRoles={['Subscriber', 'Editor', 'Admin']} />}>
+        <Route
+          element={<ProtectedLayout allowedRoles={[Roles.Admin, Roles.Editor, Roles.Subscriber]} />}
+        >
           <Route path='subscriber' element={<Subscriber />} />
         </Route>
 
