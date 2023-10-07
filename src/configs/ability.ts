@@ -1,6 +1,7 @@
-import { AbilityBuilder, createMongoAbility, PureAbility } from '@casl/ability';
+import { Abilities, AbilityBuilder, AbilityTuple, createMongoAbility } from '@casl/ability';
 import { AppAction, AppRole, AppSubject } from '~/interfaces/auth';
 import { Actions, Roles, Subjects } from './auth';
+import { PureAbility } from '@casl/ability';
 
 export type AppAbility = PureAbility<[Actions, Subjects]>;
 
@@ -29,13 +30,4 @@ export default function buildAbilityFor(role: AppRole): AppAbility {
   }
 
   return build();
-}
-
-export function findReason(ability: AppAbility, action: AppAction, subject: AppSubject) {
-  const rules = ability.rules.filter((rule) => rule.inverted);
-  // return rules.find((rule) => rule.action === action)?.reason || 'Default reason';
-  return (
-    rules.find((rule) => rule.action === action && rule.subject === subject)?.reason ||
-    'Default reason'
-  );
 }

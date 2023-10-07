@@ -1,18 +1,20 @@
 export enum Roles {
-  Admin = 'Admin',
-  Editor = 'Editor',
-  Subscriber = 'Subscriber',
-  Guest = 'Guest',
+  Admin = 'admin',
+  Editor = 'editor',
+  Subscriber = 'subscriber',
+  Guest = 'guest',
 }
 
 export enum Actions {
-  Create = 'Create',
-  Delete = 'Delete',
-  Edit = 'Edit',
-  Read = 'Read',
+  Create = 'create',
+  Delete = 'delete',
+  Edit = 'edit',
+  Read = 'read',
+  Manage = 'manage',
 }
 
 export enum Subjects {
-  Auth = 'Auth',
-  Todo = 'Todo',
+  Auth = 'auth',
+  Todo = 'todo',
+  All = 'all',
 }

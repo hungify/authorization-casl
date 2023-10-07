@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import buildAbilityFor, { AppAbility } from '~/configs/ability';
 import { Roles } from '~/configs/auth';
 import { useAuth } from '~/hooks/useAuth';
@@ -11,9 +11,11 @@ interface AbilityProviderProps {
 }
 export default function AbilityProvider({ children }: AbilityProviderProps) {
   const { user } = useAuth();
-  const [ability, setAbility] = useState(buildAbilityFor(user?.role || Roles.Guest));
+  const [ability, setAbility] = useState(buildAbilityFor(Roles.Guest));
 
   useEffect(() => {
+    if (!user?.role) return;
+
     setAbility(buildAbilityFor(user?.role || Roles.Guest));
   }, [user?.role]);
 

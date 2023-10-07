@@ -9,13 +9,12 @@ export interface User {
   isAuthenticated?: boolean;
 }
 
-// export type UserLogin = Pick<User, 'email' | 'password'>;
 export type UserLogin = Pick<User, 'email'>;
 
 export type UserRegister = Omit<User, 'id' | 'isAuthenticated'>;
 
-export type AppRole = keyof typeof Roles;
+export type AppRole = `${Roles}`;
 
-export type AppAction = keyof typeof Actions;
+export type AppAction = `${Actions}`;
 
-export type AppSubject = keyof typeof Subjects;
+export type AppSubject = `${Subjects}`;

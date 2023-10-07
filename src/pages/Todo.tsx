@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import Can from '~/components/Can';
-import { findReason } from '~/configs/ability';
 import { Actions, Subjects } from '~/configs/auth';
 import { useAbility } from '~/hooks';
 import { useAuth } from '~/hooks/useAuth';
@@ -27,9 +26,9 @@ export default function Todo() {
   const ability = useAbility();
 
   const todoReason = useMemo(() => {
-    const createTodo = findReason(ability, Actions.Create, Subjects.Todo);
-    const deleteTodo = findReason(ability, Actions.Delete, Subjects.Todo);
-    const readTodo = findReason(ability, Actions.Read, Subjects.Todo);
+    const createTodo = ability.findReason(Actions.Create, Subjects.Todo);
+    const deleteTodo = ability.findReason(Actions.Delete, Subjects.Todo);
+    const readTodo = ability.findReason(Actions.Read, Subjects.Todo);
     return {
       createTodo,
       deleteTodo,
@@ -37,7 +36,7 @@ export default function Todo() {
     };
   }, [ability]);
 
-  const youCan = useMemo(() => {
+  const canI = useMemo(() => {
     const createTodo = ability.can(Actions.Create, Subjects.Todo);
     const deleteTodo = ability.can(Actions.Delete, Subjects.Todo);
     const readTodo = ability.can(Actions.Read, Subjects.Todo);
@@ -51,7 +50,7 @@ export default function Todo() {
 
   const handleAddTodo = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (youCan.createTodo) {
+    if (canI.createTodo) {
       setTodos([...todos, { id: new Date().getTime(), title }]);
     } else {
       alert(todoReason.createTodo);
@@ -59,7 +58,7 @@ export default function Todo() {
   };
 
   const handleDeleteTodo = (id: number) => {
-    if (youCan.deleteTodo) {
+    if (canI.deleteTodo) {
       setTodos(todos.filter((todo) => todo.id !== id));
     } else {
       alert(todoReason.deleteTodo);
@@ -78,7 +77,7 @@ export default function Todo() {
         <div>Only Admin can delete todo</div>
       </Can>
 
-      {youCan.readTodo ? (
+      {canI.readTodo ? (
         <>
           <h1>This is the User Dashboard Page</h1>
           <h2> Your role is: {user?.role}</h2>
